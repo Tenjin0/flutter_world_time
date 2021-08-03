@@ -13,10 +13,12 @@ class _LoadingState extends State<Loading> {
 
   getArea() async {
     await WorldTime.getAreas();
+
+    await WorldTime.getSelfLocation();
     setState(() {
       time = 'ready';
     });
-    Navigator.pushReplacementNamed(context, '/home');
+    Navigator.pushReplacementNamed(context, '/home', arguments: WorldTime.self);
   }
 
   @override
