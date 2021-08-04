@@ -9,27 +9,40 @@ class Loading extends StatefulWidget {
 }
 
 class _LoadingState extends State<Loading> {
-  String time = 'loading';
-
-  getArea() async {
+  init() async {
     await WorldTime.getAreas();
 
     await WorldTime.getSelfLocation();
-    setState(() {
-      time = 'ready';
-    });
     Navigator.pushReplacementNamed(context, '/home', arguments: WorldTime.self);
   }
 
   @override
   void initState() {
     super.initState();
+    print("initstate");
+  }
 
-    getArea();
+  changeLocal(String area, String location) async {
+    var result = await WorldTime.getOffSet(area, location);
+    print(result);
+    int offset = await WorldTime.getOffSet(area, location);
+    Navigator.pushReplacementNamed(context, '/home',
+        arguments: Local(area, location, offset));
   }
 
   @override
   Widget build(BuildContext context) {
+    if (ModalRoute.of(context) != null &&
+        ModalRoute.of(context)!.settings.arguments != null) {
+      print(ModalRoute.of(context)!.settings.arguments);
+      List<String>? result =
+          ModalRoute.of(context)!.settings.arguments as List<String>?;
+      if (result != null) {
+        changeLocal(result[0], result[1]);
+      }
+    } else {
+      init();
+    }
     return Scaffold(
       backgroundColor: Colors.blueGrey,
       body: Center(

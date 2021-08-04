@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:world_time/services/word_time.dart';
 
 class ChooseLocation extends StatefulWidget {
   @override
@@ -13,7 +14,8 @@ class _ChooseLocationState extends State<ChooseLocation> {
 
   @override
   Widget build(BuildContext context) {
-    print("build");
+    var local = ModalRoute.of(context)!.settings.arguments as Local;
+    List<String> locations = local.getLocations();
     return Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
@@ -22,7 +24,20 @@ class _ChooseLocationState extends State<ChooseLocation> {
         centerTitle: true,
         elevation: 0.0,
       ),
-      body: Text('choose location screen'),
+      body: ListView.builder(
+        itemCount: WorldTime.areas[local.area]!.length,
+        itemBuilder: (context, index) {
+          return Card(
+            child: ListTile(
+              title: Text(locations[index]),
+              onTap: () async {
+                Navigator.popAndPushNamed(context, '/',
+                    arguments: [local.area, locations[index]]);
+              },
+            ),
+          );
+        },
+      ),
     );
   }
 }

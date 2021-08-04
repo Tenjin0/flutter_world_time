@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:world_time/services/word_time.dart';
 
 class Home extends StatefulWidget {
@@ -7,27 +10,76 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  Local? local = Local("Europe", 'Paris', "+02:00");
+  Local local = Local("Europe", 'Paris', 0);
+  Timer? timer;
+  int count = 0;
+  DateTime? current;
+  @override
+  void initState() {
+    super.initState();
+    this.current = local.current();
+    timer = Timer.periodic(Duration(seconds: 1), (aTimer) {
+      setState(() {
+        this.current = local.current();
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    timer!.cancel();
+  }
 
   @override
   Widget build(BuildContext context) {
-    this.local = ModalRoute.of(context)!.settings.arguments as Local?;
+    var local = ModalRoute.of(context)!.settings.arguments;
+    if (local != null) {
+      this.local = local as Local;
+    }
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          children: [
-            TextButton.icon(
-              onPressed: () {
-                Navigator.pushNamed(context, '/location');
-              },
-              icon: Icon(Icons.edit_location),
-              label: Text('edit location'),
-            ),
-            SizedBox(height: 20),
-            Row(
-              children: [Text(local!.area)],
-            )
-          ],
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(0, 120, 0, 0),
+          child: Column(
+            children: [
+              TextButton.icon(
+                onPressed: () async {
+                  Navigator.pushNamed(context, '/location',
+                      arguments: this.local);
+                },
+                icon: Icon(Icons.edit_location),
+                label: Text(
+                  'edit location',
+                  style: TextStyle(
+                    fontSize: 16.0,
+                  ),
+                ),
+              ),
+              SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    this.local.location,
+                    style: TextStyle(
+                      fontSize: 25.0,
+                      letterSpacing: 2.0,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10),
+              Text(
+                this.current != null
+                    ? DateFormat.jm().format(this.current!)
+                    : "",
+                style: TextStyle(
+                  fontSize: 50.0,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
