@@ -20,6 +20,13 @@ void main() {
           // is not restarted.
           ),
       initialRoute: '/home',
+      // onGenerateInitialRoutes: (String initialRouteName) {
+      //   return [
+      //     RouteSettings(name: '/'),
+      //     navigator.widget.onGenerateRoute(
+      //         RouteSettings(name: '/person', arguments: 'Chris')),
+      //   ];
+      // },
       routes: {
         '/': (context) => Loading(),
         '/home': (context) => Home(),

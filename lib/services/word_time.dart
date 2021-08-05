@@ -60,6 +60,10 @@ class WorldTime {
   static Map<String, List<String>> areas = new Map();
   static Local? self;
 
+  static defaultLocal() {
+    return Local("Europe", 'Paris', 0);
+  }
+
   static getAreas() async {
     var url = Uri.parse('http://worldtimeapi.org/api/timezone');
     var response = await http.get(url);

@@ -10,7 +10,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  Local local = Local("Europe", 'Paris', 0);
+  Local local = WorldTime.defaultLocal();
   Timer? timer;
   int count = 0;
   DateTime? current;
