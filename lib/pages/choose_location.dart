@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:world_time/services/word_time.dart';
 
-import 'package:world_time/helpers/searchList.dart';
+import 'package:world_time/widget/searchList.dart';
 
 class ChooseLocation extends StatefulWidget {
   @override
@@ -16,26 +16,37 @@ class _ChooseLocationState extends State<ChooseLocation> {
 
   @override
   Widget build(BuildContext context) {
-    Local local = WorldTime.defaultLocal();
+    final String area = ModalRoute.of(context)!.settings.arguments as String;
 
-    if (ModalRoute.of(context) != null &&
-        ModalRoute.of(context)!.settings.arguments != null) {
-      local = (ModalRoute.of(context)!.settings.arguments as Local);
-    }
-
-    List<String> locations = local.getLocations();
+    final List<String> locations = WorldTime.getLocations(area);
 
     return Scaffold(
         backgroundColor: Colors.grey[200],
         appBar: AppBar(
-          actions: [],
+          actions: [
+            IconButton(
+              onPressed: () {
+                Navigator.popAndPushNamed(
+                  context,
+                  '/area',
+                );
+              },
+              icon: Icon(Icons.shopping_cart),
+              tooltip: 'Change area',
+            )
+          ],
           title: Text('Choose a location'),
           centerTitle: true,
           elevation: 0.0,
         ),
         body: SearchList(
-          local: local,
           locations: locations,
+          hintText: 'Location name',
+          onTap: (String location) {
+            print(location);
+            Navigator.popAndPushNamed(context, '/',
+                arguments: [area, location].toList());
+          },
         ));
   }
 }

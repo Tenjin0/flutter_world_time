@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:world_time/services/word_time.dart';
 
-class ChooseLocation extends StatefulWidget {
+import 'package:world_time/widget/searchList.dart';
+
+class ChooseArea extends StatefulWidget {
   @override
-  _ChooseLocationState createState() => _ChooseLocationState();
+  _ChooseAreaState createState() => _ChooseAreaState();
 }
 
-class _ChooseLocationState extends State<ChooseLocation> {
+class _ChooseAreaState extends State<ChooseArea> {
   @override
   void initState() {
     super.initState();
@@ -16,12 +19,18 @@ class _ChooseLocationState extends State<ChooseLocation> {
     return Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
-        actions: [],
-        title: Text('Choose a location'),
+        title: Text('Choose an Area'),
         centerTitle: true,
         elevation: 0.0,
       ),
-      body: Text('choose location screen'),
+      body: SearchList(
+        locations: WorldTime.areas.keys.toList(),
+        hintText: 'Area name',
+        onTap: (ressource) {
+          print(ressource);
+          Navigator.popAndPushNamed(context, '/location', arguments: ressource);
+        },
+      ),
     );
   }
 }

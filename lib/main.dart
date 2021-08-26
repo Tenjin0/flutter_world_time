@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'pages/home.dart';
 import 'pages/loading.dart';
 import 'pages/choose_location.dart';
+import 'pages/choose_area.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -19,7 +20,7 @@ void main() {
           // Notice that the counter didn't reset back to zero; the application
           // is not restarted.
           ),
-      initialRoute: '/home',
+      initialRoute: '/',
       // onGenerateInitialRoutes: (String initialRouteName) {
       //   return [
       //     RouteSettings(name: '/'),
@@ -31,5 +32,6 @@ void main() {
         '/': (context) => Loading(),
         '/home': (context) => Home(),
         '/location': (context) => ChooseLocation(),
+        '/area': (context) => ChooseArea(),
       }));
 }

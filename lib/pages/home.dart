@@ -10,25 +10,33 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  Local local = WorldTime.defaultLocal();
+  Local? local;
   Timer? timer;
   int count = 0;
   DateTime? current;
   @override
   void initState() {
-    super.initState();
-    this.current = local.current();
-    timer = Timer.periodic(Duration(seconds: 1), (aTimer) {
+    if (this.local != null) {
       setState(() {
-        this.current = local.current();
+        this.current = local!.current();
       });
+    }
+    timer = Timer.periodic(Duration(seconds: 1), (aTimer) {
+      if (this.local != null) {
+        setState(() {
+          this.current = local!.current();
+        });
+      }
     });
+    print("home init");
+    super.initState();
   }
 
   @override
   void dispose() {
-    super.dispose();
     timer!.cancel();
+    print("home dispose");
+    super.dispose();
   }
 
   @override
@@ -37,49 +45,48 @@ class _HomeState extends State<Home> {
     if (local != null) {
       this.local = local as Local;
     }
+
+    List<Widget> children = [
+      TextButton.icon(
+        onPressed: () async {
+          // timer!.cancel();
+          Navigator.pushNamed(context, '/location',
+              arguments: this.local!.area);
+        },
+        icon: Icon(Icons.edit_location),
+        label: Text(
+          'edit location',
+          style: TextStyle(
+            fontSize: 16.0,
+          ),
+        ),
+      ),
+      SizedBox(height: 20),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            this.local != null ? this.local!.location : "",
+            style: TextStyle(
+              fontSize: 25.0,
+              letterSpacing: 2.0,
+            ),
+          ),
+        ],
+      ),
+      SizedBox(height: 10),
+      Text(
+        this.current != null ? DateFormat.jm().format(this.current!) : "",
+        style: TextStyle(
+          fontSize: 50.0,
+        ),
+      ),
+    ];
     return Scaffold(
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(0, 120, 0, 0),
-          child: Column(
-            children: [
-              TextButton.icon(
-                onPressed: () async {
-                  Navigator.pushNamed(context, '/location',
-                      arguments: this.local);
-                },
-                icon: Icon(Icons.edit_location),
-                label: Text(
-                  'edit location',
-                  style: TextStyle(
-                    fontSize: 16.0,
-                  ),
-                ),
-              ),
-              SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    this.local.location,
-                    style: TextStyle(
-                      fontSize: 25.0,
-                      letterSpacing: 2.0,
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 10),
-              Text(
-                this.current != null
-                    ? DateFormat.jm().format(this.current!)
-                    : "",
-                style: TextStyle(
-                  fontSize: 50.0,
-                ),
-              ),
-            ],
-          ),
+          child: Column(children: children),
         ),
       ),
     );

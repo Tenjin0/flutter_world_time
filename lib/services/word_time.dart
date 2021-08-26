@@ -64,6 +64,10 @@ class WorldTime {
     return Local("Europe", 'Paris', 0);
   }
 
+  static List<String> getLocations(String area) {
+    return WorldTime.areas[area] as List<String>;
+  }
+
   static getAreas() async {
     var url = Uri.parse('http://worldtimeapi.org/api/timezone');
     var response = await http.get(url);

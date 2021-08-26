@@ -10,24 +10,40 @@ class Loading extends StatefulWidget {
 
 class _LoadingState extends State<Loading> {
   init() async {
+    print("loading");
     await WorldTime.getAreas();
-
+    print("areas");
     await WorldTime.getSelfLocation();
-    Navigator.pushReplacementNamed(context, '/home', arguments: WorldTime.self);
+    print("location");
+    if (this.mounted) {
+      Navigator.pushReplacementNamed(context, '/home',
+          arguments: WorldTime.self);
+    }
   }
 
   @override
   void initState() {
+    print("loading init");
     super.initState();
-    print("initstate");
+  }
+
+  @override
+  void dispose() {
+    print("loading dispose");
+    super.dispose();
   }
 
   changeLocal(String area, String location) async {
-    var result = await WorldTime.getOffSet(area, location);
-    print(result);
-    int offset = await WorldTime.getOffSet(area, location);
-    Navigator.pushReplacementNamed(context, '/home',
-        arguments: Local(area, location, offset));
+    print("changeLocal $area, $location");
+    try {
+      int offset = await WorldTime.getOffSet(area, location);
+      print('$offset');
+      Navigator.pushReplacementNamed(context, '/home',
+          arguments: Local(area, location, offset));
+    } catch (e) {
+      print(e);
+      Navigator.pop(context);
+    }
   }
 
   @override
