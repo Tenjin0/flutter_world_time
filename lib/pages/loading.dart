@@ -4,17 +4,15 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import '../services/word_time.dart';
 
 class Loading extends StatefulWidget {
+  bool hasConnection = false;
   @override
   _LoadingState createState() => _LoadingState();
 }
 
 class _LoadingState extends State<Loading> {
   init() async {
-    print("loading");
     await WorldTime.getAreas();
-    print("areas");
     await WorldTime.getSelfLocation();
-    print("location");
     if (this.mounted) {
       Navigator.pushReplacementNamed(context, '/home',
           arguments: WorldTime.self);
@@ -23,18 +21,15 @@ class _LoadingState extends State<Loading> {
 
   @override
   void initState() {
-    print("loading init");
     super.initState();
   }
 
   @override
   void dispose() {
-    print("loading dispose");
     super.dispose();
   }
 
   changeLocal(String area, String location) async {
-    print("changeLocal $area, $location");
     try {
       int offset = await WorldTime.getOffSet(area, location);
       print('$offset');
